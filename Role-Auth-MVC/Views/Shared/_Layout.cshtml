@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Role Based Auth</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .content-wrapper {
+            padding: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-shield-alt text-primary"></i> RoleAuth System
+            </a>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="navbar-nav ms-auto">
+                    <span class="navbar-text me-3">
+                        <i class="fas fa-user"></i> Welcome, <strong>@User.Identity.Name</strong>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <span class="badge bg-danger ms-2">Admin</span>
+                        }
+                        else if (User.IsInRole("Customer"))
+                        {
+                            <span class="badge bg-success ms-2">Customer</span>
+                        }
+                        else if (User.IsInRole("Editor"))
+                        {
+                            <span class="badge bg-info ms-2">Editor</span>
+                        }
+                        else if (User.IsInRole("Moderator"))
+                        {
+                            <span class="badge bg-warning ms-2">Moderator</span>
+                        }
+                    </span>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
